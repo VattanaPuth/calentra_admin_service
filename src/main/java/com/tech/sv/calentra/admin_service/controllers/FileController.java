@@ -34,7 +34,7 @@ public class FileController {
 		return ResponseEntity.ok(response);
 	}
 
-	@DeleteMapping("/{fileId}")
+	@DeleteMapping("/delete/{fileId}")
 	public ResponseEntity<Void> delete(@PathVariable UUID fileId) {
 		minioServiceImpl.deleteFile(fileId);
 		return ResponseEntity.noContent().build();
