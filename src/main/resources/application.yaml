@@ -1,0 +1,38 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: calentra_admin_service
+
+  config:
+    import: "classpath:env.yaml"
+
+  datasource:
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+    driver-class-name: ${DATASOURCE_DRIVER_CLASS_NAME}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: false
+      properties:
+        hibernate:
+          format_sql: false
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+app:
+  file-upload:
+    allowed-extensions: jpg,jpeg,png,gif,webp,pdf,zip,doc,docx,xls,xlsx
+    max-size-mb: 100
+
+minio:
+  endpoint: ${MINIO_ENDPOINT}
+  access-key: ${MINIO_ACESSKEY}
+  secret-key: ${MINIO_SECRETKEY}
