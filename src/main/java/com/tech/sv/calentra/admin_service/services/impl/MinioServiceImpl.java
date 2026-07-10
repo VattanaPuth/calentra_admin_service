@@ -3,7 +3,6 @@ package com.tech.sv.calentra.admin_service.services.impl;
 import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,8 +14,6 @@ import com.tech.sv.calentra.admin_service.repositories.FileMetadataRepository;
 import com.tech.sv.calentra.admin_service.services.MinioService;
 
 import io.minio.BucketExistsArgs;
-import io.minio.GetPresignedObjectUrlArgs;
-import io.minio.Http.Method;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
