@@ -31,10 +31,10 @@ public class FileMetadata {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id; //y
+    private UUID id; 
 
     @Column(nullable = false)
-    private String originalFileName; //y
+    private String originalFileName;
 
     @Column(nullable = false, unique = true)
     private String storedFileName;
@@ -44,15 +44,15 @@ public class FileMetadata {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private FileCategory category; //y
+    private FileCategory category; 
 
     @Column(nullable = false)
-    private String contentType; //y
+    private String contentType; 
 
     @Column(nullable = false)
-    private long size; //y
+    private long size;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
-    private Instant uploadedAt; //y
+    private Instant uploadedAt; 
 }
