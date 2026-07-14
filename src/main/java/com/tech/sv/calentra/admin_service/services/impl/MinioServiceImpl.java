@@ -123,29 +123,15 @@ public class MinioServiceImpl implements MinioService{
     
     private FileMetadata uploadValidatedFile(MultipartFile file) {
 
-        String extension = getExtension(
-                file.getOriginalFilename()
-        );
-
-        FileCategory category =
-                FileCategory.fromExtension(extension);
-
-        String bucketName = category.getBucketName();
-
-        String cleanExtension = extension
-                .replace(".", "")
-                .toLowerCase(Locale.ROOT);
-
-        String storedFileName =
-                UUID.randomUUID() + "." + cleanExtension;
-
-        String contentType = file.getContentType() == null
-                ? "application/octet-stream"
-                : file.getContentType();
+		String extension = getExtension(file.getOriginalFilename());
+		FileCategory category = FileCategory.fromExtension(extension);
+		String bucketName = category.getBucketName();
+		String cleanExtension = extension.replace(".", "").toLowerCase(Locale.ROOT);
+		String storedFileName = UUID.randomUUID() + "." + cleanExtension;
+		String contentType = file.getContentType() == null ? "application/octet-stream" : file.getContentType();
 
         try {
             ensureBucketExists(bucketName);
-
             try (InputStream inputStream = file.getInputStream()) {
                 minioClient.putObject(
                         PutObjectArgs.builder()
@@ -171,16 +157,9 @@ public class MinioServiceImpl implements MinioService{
                     .build();
 
             return fileMetadataRepository.save(metadata);
-
-        } catch (Exception exception) {
-            throw new RuntimeException(
-                    "File upload failed for "
-                            + file.getOriginalFilename()
-                            + ": "
-                            + exception.getMessage(),
-                    exception
-            );
-        }
+		} catch (Exception exception) {
+			throw new RuntimeException("File upload failed for " + file.getOriginalFilename() + ": " + exception.getMessage(), exception);
+		}
     }
 
 

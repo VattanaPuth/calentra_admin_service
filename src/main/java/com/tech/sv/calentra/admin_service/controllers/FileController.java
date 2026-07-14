@@ -39,7 +39,6 @@ public class FileController {
 	@PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<List<FileMetadata>> uploadFiles(@RequestParam("files") List<MultipartFile> files) {
 		List<FileMetadata> uploadedFiles = minioServiceImpl.uploadFiles(files);
-
 		return ResponseEntity.status(HttpStatus.CREATED).body(uploadedFiles);
 	}
 
