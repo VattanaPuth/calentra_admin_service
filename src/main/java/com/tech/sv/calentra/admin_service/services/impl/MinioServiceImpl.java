@@ -1,7 +1,9 @@
 package com.tech.sv.calentra.admin_service.services.impl;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -31,41 +33,28 @@ public class MinioServiceImpl implements MinioService{
 
     public FileMetadata uploadFile(MultipartFile file) {
         validateFile(file);
-
-        String extension = getExtension(file.getOriginalFilename());
-        FileCategory category = FileCategory.fromExtension(extension);
-        String bucketName = category.getBucketName();
-        String storedFileName = UUID.randomUUID() + "." + extension.replace(".", "");
-
-        try {
-            ensureBucketExists(bucketName);
-
-            try (InputStream inputStream = file.getInputStream()) {
-                minioClient.putObject(
-                        PutObjectArgs.builder()
-                                .bucket(bucketName)
-                                .object(storedFileName)
-                                .stream(inputStream, file.getSize(), -1L)
-                                .contentType(file.getContentType())
-                                .build()
-                );
-            }
-
-            FileMetadata metadata = FileMetadata.builder()
-                    .originalFileName(file.getOriginalFilename())
-                    .storedFileName(storedFileName)
-                    .bucketName(bucketName)
-                    .category(category)
-                    .contentType(file.getContentType())
-                    .size(file.getSize())
-                    .build();
-
-            return fileMetadataRepository.save(metadata);
-
-        } catch (Exception e) {
-            throw new RuntimeException("File upload failed: " + e.getMessage(), e);
-        }
+        return uploadValidatedFile(file);
     }
+    
+	@Override
+	public List<FileMetadata> uploadFiles(List<MultipartFile> files) {
+
+		if (files == null || files.isEmpty()) {
+			throw new IllegalArgumentException("At least one file is required");
+		}
+
+		files.forEach(this::validateFile);
+
+		List<FileMetadata> uploadedFiles = new ArrayList<>(files.size());
+
+		for (MultipartFile file : files) {
+			FileMetadata metadata = uploadValidatedFile(file);
+			uploadedFiles.add(metadata);
+		}
+
+		return uploadedFiles;
+	}
+
 
     public void deleteFile(UUID fileId) {
         FileMetadata metadata = fileMetadataRepository.findById(fileId)
@@ -131,5 +120,68 @@ public class MinioServiceImpl implements MinioService{
         	return "";
         return filename.substring(filename.lastIndexOf("."));
     }
+    
+    private FileMetadata uploadValidatedFile(MultipartFile file) {
+
+        String extension = getExtension(
+                file.getOriginalFilename()
+        );
+
+        FileCategory category =
+                FileCategory.fromExtension(extension);
+
+        String bucketName = category.getBucketName();
+
+        String cleanExtension = extension
+                .replace(".", "")
+                .toLowerCase(Locale.ROOT);
+
+        String storedFileName =
+                UUID.randomUUID() + "." + cleanExtension;
+
+        String contentType = file.getContentType() == null
+                ? "application/octet-stream"
+                : file.getContentType();
+
+        try {
+            ensureBucketExists(bucketName);
+
+            try (InputStream inputStream = file.getInputStream()) {
+                minioClient.putObject(
+                        PutObjectArgs.builder()
+                                .bucket(bucketName)
+                                .object(storedFileName)
+                                .stream(
+                                        inputStream,
+                                        file.getSize(),
+                                        -1L
+                                )
+                                .contentType(contentType)
+                                .build()
+                );
+            }
+
+            FileMetadata metadata = FileMetadata.builder()
+                    .originalFileName(file.getOriginalFilename())
+                    .storedFileName(storedFileName)
+                    .bucketName(bucketName)
+                    .category(category)
+                    .contentType(contentType)
+                    .size(file.getSize())
+                    .build();
+
+            return fileMetadataRepository.save(metadata);
+
+        } catch (Exception exception) {
+            throw new RuntimeException(
+                    "File upload failed for "
+                            + file.getOriginalFilename()
+                            + ": "
+                            + exception.getMessage(),
+                    exception
+            );
+        }
+    }
+
 
 }
