@@ -25,16 +25,14 @@ import lombok.NoArgsConstructor;
 @Table(name = "file_metadata")
 @Data
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileMetadata {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private UUID id; //y
 
     @Column(nullable = false)
-    private String originalFileName;
+    private String originalFileName; //y
 
     @Column(nullable = false, unique = true)
     private String storedFileName;
@@ -44,15 +42,15 @@ public class FileMetadata {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private FileCategory category;
+    private FileCategory category; //y
 
     @Column(nullable = false)
-    private String contentType;
+    private String contentType; //y
 
     @Column(nullable = false)
-    private long size;
+    private long size; //y
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
-    private Instant uploadedAt;
+    private Instant uploadedAt; //y
 }

@@ -84,13 +84,18 @@ public class MinioServiceImpl implements MinioService{
         }
     }
 
+    
+    /*
+     * |-----------------
+     * |VALIDATIONS BLOCK
+     * |-----------------
+    */
 	private void validateFile(MultipartFile file) {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("File is empty");
         }
 
-        String extension = getExtension(file.getOriginalFilename())
-                .toLowerCase().replace(".", "");
+        String extension = getExtension(file.getOriginalFilename()).toLowerCase().replace(".", "");
         List<String> allowedExtensions = uploadProperties.allowedExtensions();
 
         if (allowedExtensions == null || allowedExtensions.isEmpty()) {
@@ -98,31 +103,32 @@ public class MinioServiceImpl implements MinioService{
         }
 
         if (!allowedExtensions.contains(extension)) {
-            throw new IllegalArgumentException(
-                    "File type ." + extension + " is not allowed. Allowed: "
-                            + allowedExtensions
-            );
+            throw new IllegalArgumentException("File type ." + extension + " is not allowed. Allowed: " + allowedExtensions);
         }
 
         long maxBytes = uploadProperties.maxSizeMb() * 1024 * 1024;
         if (file.getSize() > maxBytes) {
-            throw new IllegalArgumentException(
-                    "File exceeds max size of " + uploadProperties.maxSizeMb() + "MB"
-            );
+            throw new IllegalArgumentException("File exceeds max size of " + uploadProperties.maxSizeMb() + "MB");
         }
     }
 
     private void ensureBucketExists(String bucketName) throws Exception {
         boolean exists = minioClient.bucketExists(
-                BucketExistsArgs.builder().bucket(bucketName).build()
+                BucketExistsArgs.builder()
+                				.bucket(bucketName)
+                				.build()
         );
+        
         if (!exists) {
-            minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+            minioClient.makeBucket(MakeBucketArgs.builder()
+            									 .bucket(bucketName)
+            									 .build());
         }
     }
 
     private String getExtension(String filename) {
-        if (filename == null || !filename.contains(".")) return "";
+        if (filename == null || !filename.contains(".")) 
+        	return "";
         return filename.substring(filename.lastIndexOf("."));
     }
 

@@ -9,6 +9,7 @@ import lombok.Data;
 public class FileMetadataResponse{
 	private UUID id;
 	private String originalFileName;
+	private String storedFileName;
 	private String category;
 	private String contentType;
 	private long size;
