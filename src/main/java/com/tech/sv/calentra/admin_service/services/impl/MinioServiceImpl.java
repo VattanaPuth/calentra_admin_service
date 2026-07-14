@@ -137,11 +137,7 @@ public class MinioServiceImpl implements MinioService{
                         PutObjectArgs.builder()
                                 .bucket(bucketName)
                                 .object(storedFileName)
-                                .stream(
-                                        inputStream,
-                                        file.getSize(),
-                                        -1L
-                                )
+								.stream(inputStream, file.getSize(), -1L)
                                 .contentType(contentType)
                                 .build()
                 );
