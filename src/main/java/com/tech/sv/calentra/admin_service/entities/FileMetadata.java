@@ -25,6 +25,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "file_metadata")
 @Data
 @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileMetadata {
 
     @Id
