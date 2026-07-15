@@ -3,6 +3,8 @@ package com.tech.sv.calentra.admin_service.entities;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import org.hibernate.annotations.SQLRestriction;
+
 import com.tech.sv.calentra.admin_service.enums.RoomBedType;
 import com.tech.sv.calentra.admin_service.enums.RoomStatus;
 import com.tech.sv.calentra.admin_service.enums.RoomType;
@@ -22,6 +24,7 @@ import lombok.Data;
 
 @Entity
 @Table(name = "rooms")
+@SQLRestriction("visible = true")
 @Data
 public class Room {
 
@@ -47,4 +50,6 @@ public class Room {
 	
 	@Enumerated(EnumType.STRING)
 	private RoomBedType bedType;
+	
+	private Boolean visible = true;
 }

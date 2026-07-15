@@ -1,8 +1,9 @@
-package com.tech.sv.calentra.admin_service.dtos.response;
+package com.tech.sv.calentra.admin_service.dtos.request;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import com.tech.sv.calentra.admin_service.dtos.response.FileMetadataResponse;
 import com.tech.sv.calentra.admin_service.enums.RoomBedType;
 import com.tech.sv.calentra.admin_service.enums.RoomStatus;
 import com.tech.sv.calentra.admin_service.enums.RoomType;
@@ -10,7 +11,7 @@ import com.tech.sv.calentra.admin_service.enums.RoomType;
 import lombok.Data;
 
 @Data
-public class RoomResponse {
+public class RoomRequest {
 	private UUID id;
 	private long roomNumber;
     private int floor;
